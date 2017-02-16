@@ -1,0 +1,25 @@
+# Initialize GST_GL_XINITTHREADS since not in OE Build 27
+GST_GL_XINITTHREADS=1
+export GST_GL_XINITTHREADS
+
+# Turn off autosleep so that monitor won't fall asleep
+sleep 1
+DISPLAY=:0 xset s off
+DISPLAY=:0 xset -dpms
+
+#Note: "DISPLAY=:0 xset q" to see sleep settings
+
+# Sets CPU to 1.2GHz.  cpufreq-info for more information. Enable only 1.
+cpufreq-set -g performance
+#cpufreq-set -g powersave
+#cpufreq-set -g ondemand
+
+#Note cpufree-info from command line to find current settings
+
+# Loop on Video forever
+while true
+do
+        DISPLAY=:0 gst-launch-1.0 playbin uri=file:///home/root/DroneVideoLoop2017.mp4 video-sink=glimagesink
+        sleep 2
+done
+

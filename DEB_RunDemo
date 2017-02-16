@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# CHANGE THIS VALUE - to the length of your test video in seconds.
+videoLength=236
+
+# Sets CPU to 1.2GHz.  cpufreq-info for more information. Enable only 1.
+sudo cpufreq-set -g performance
+#sudo cpufreq-set -g powersave
+#sudo cpufreq-set -g ondemand
+
+
+#  Start Top is a LXTerminal window
+sudo lxterminal --title=Top --command "top" &
+
+sleep 3  # Give top window a chance to come up
+
+#Get the Window ID for Top window
+output=`wmctrl -l|grep Top`
+set -- $output
+wid=$1
+
+echo -e "*** Window ID = $wid ***\n"
+
+# Loop video forever
+while true
+do
+     # Video is $videoLength Seconds run in background a wait
+     gst-launch-1.0 playbin uri=file:///home/linaro/Desktop/DroneVideoLoop2017.mp4 &
+
+     sleep 8
+
+     # Put top over the video
+     echo -e "\nOverlay Window ID $wid \n"
+     wmctrl -i -a $wid
+
+     # wait till video is over
+     echo -e "Video length = $videoLength seconds \n"
+     sleep $videoLength
+
+     echo -e "Video Over \n"
+done
+
